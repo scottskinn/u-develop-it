@@ -19,8 +19,20 @@ const db = mysql.createConnection(
       database: 'election'
     },
     console.log('Connected to the election database.')
-  );
+);
 
+// This method is the key component that allows SQL commands to be written in a Node.js application.
+// db.query(`SELECT * FROM candidates`, (err, rows) => {
+//     console.log(rows);
+// });
+
+// GET a single candidate
+db.query(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(row);
+  });
 
 // Default response for any other request (Not Found)
 app.use((req, res) => {
