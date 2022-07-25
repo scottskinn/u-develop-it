@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./db/connection');
 const inputCheck = require('./utils/inputCheck');
+const sequelize = require('./config/connection');
 
 const apiRoutes = require('./routes/apiRoutes');
 
@@ -20,6 +21,11 @@ app.use((req, res) => {
   res.status(404).end();
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
+// turn on connection to db and server
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
