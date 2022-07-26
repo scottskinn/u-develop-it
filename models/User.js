@@ -1,8 +1,23 @@
-const { Model, DataTypes } = require('sequelize');
+const { Sequelize, Model, DataTypes } = require('sequelize');
+// const sequelize = new Sequelize("sqlite::memory:");
 const sequelize = require('../config/connection');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
+const myPlaintextPassword = 's0/\/\P4$$w0rD';
+const someOtherPlaintextPassword = 'not_bacon';
+
+bcrypt.hash(myPlaintextPassword, saltRounds).then(function(hash) {
+    // Store hash in your password DB.
+});
 
 // create our User model
-class User extends Model {}
+class User extends Model {
+      // set up method to run on instance data (per user) to check password
+        checkPassword(loginPW) {
+        return bcrypt.compareSync(loginPW, this.password); 
+    }
+}
 
 // define table columns and configuration
 User.init(
@@ -45,12 +60,28 @@ User.init(
       }
     },
     {
-      sequelize,
-      timestamps: false,
-      freezeTableName: true,
-      underscored: true,
-      modelName: 'user'
+        hooks: {
+            // set up beforeCreate lifecycle "hook" functionality
+            async beforeCreate(newUserData) {
+              newUserData.password = await bcrypt.hash(newUserData.password, 10);
+              return newUserData;
+            },
+            // set up beforeUpdate lifecycle "hook" functionality
+            async beforeUpdate(updatedUserData) {
+              updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+              return updatedUserData;
+            }
+        },
+        sequelize
+        // without sequelize here I get an error when starting the server
+    },
+    {
+        sequelize,
+        timestamps: false,
+        freezeTableName: true,
+        underscored: true,
+        modelName: 'user',
     }
-  );
+);
 
 module.exports = User;
