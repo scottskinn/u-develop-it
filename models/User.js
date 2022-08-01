@@ -1,11 +1,10 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 // const sequelize = new Sequelize("sqlite::memory:");
 const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 const myPlaintextPassword = 's0/\/\P4$$w0rD';
-const someOtherPlaintextPassword = 'not_bacon';
 
 bcrypt.hash(myPlaintextPassword, saltRounds).then(function(hash) {
     // Store hash in your password DB.
