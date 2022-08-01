@@ -13,16 +13,15 @@ Candidate.belongsTo(User, {
     onDelete: 'SET NULL'
 });
 
-// User.belongsToMany(Candidate, {
-//     through: Vote,
-//     as: 'voted_posts',
-//     foreignKey: 'user_id'
-// });
-  
-Candidate.belongsToMany(User, {
+User.belongsToMany(Candidate, {
     through: Vote,
     as: 'voted_posts',
-    foreignKey: 'candidate_id'
+    foreignKey: 'user_id'
+});
+  
+Candidate.belongsToMany(Vote, {
+    through: Vote,
+    as: 'voted_posts',
 });
 
 
@@ -30,9 +29,9 @@ Vote.belongsTo(Candidate, {
     foreignKey: 'candidate_id'
 });
 
-// Vote.belongsTo(Candidate, {
-//     foreignKey: 'candidate_id'
-// });
+Vote.belongsTo(Candidate, {
+    foreignKey: 'candidate_id'
+});
 
 
 module.exports = { User, Vote, Candidate };
